@@ -13,4 +13,4 @@ kaptive.py -a *.fna -k Streptococcus_suis_cps_locus_primary_reference.gbk -o out
 Then wait to it finish.
 * We default to think the genome sequence file have a ".fna" suffix, if your file is not, please change the ".fna" within above command to the suffix of your file.
 # Further
-You can also use create a reference sequence files for the bacteria you want to predict the serotypes, or other gene clusters which have different types, as the authors of Kaptive said. Just notice that your multi-record reference sequence file should include nucleotide sequences for each whole locus and protein sequences for their genes, if you download it from NCBI, just choose Genbank(full) format to download.
+You can also create a reference sequence files for the bacteria you want to predict the serotypes, or other gene clusters which have different types, as the authors of Kaptive said. Just according to our template and notice that your multi-record reference sequence file should include nucleotide sequences for each whole locus and protein sequences for their genes, if you download it from NCBI, choose Genbank(full) format to download.
