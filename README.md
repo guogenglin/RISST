@@ -1,8 +1,8 @@
 # RISST
-Rapid In Silico SeroTyping for four common swine bacerial pathogens
+Rapid In Silico SeroTyping for three common swine bacerial pathogens
 # What is it?
 Similar with primercheck we provide before, this repository is also writing for rapid batch predict the bacteria serotype for numerous genome sequence dataset.   
-Here we provide 5 reference sequence files of serotype determine locus of four most common swine bacterial pathogens, *Streptococcus suis*, *Glaesserella parasuis*, *Actinobacillus pleuropneumoniae* and *Pasteurella multocida*. And a Klebsiella capsule and lipopolysaccharide serotype prediction tool--Kaptive were used. It just like a DLC of this software, for expand the database, let more bacteria serotype prediction becoming available.
+Here we provide 3 reference sequence files of serotype determine locus of three most common swine bacterial pathogens, *Streptococcus suis*, *Glaesserella parasuis*, and *Actinobacillus pleuropneumoniae*. A Klebsiella capsule and lipopolysaccharide serotype prediction tool--Kaptive were used. It just like a espansion pack of the database of this software, let more bacteria serotype prediction becoming available.
 # External Dependencies
 Kaptive https://github.com/katholt/Kaptive/
 # Usage
