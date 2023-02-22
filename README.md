@@ -1,16 +1,41 @@
 # RISST
 Rapid In Silico SeroTyping for three common swine bacerial pathogens
+
+
 # What is it?
-Similar with primercheck we provide before, this repository is also writing for rapid batch predict the bacteria serotype for numerous genome sequence dataset.   
-Here we provide 3 reference sequence files of serotype determine locus of three most common swine bacterial pathogens, *Streptococcus suis*, *Glaesserella parasuis*, and *Actinobacillus pleuropneumoniae*. A Klebsiella capsule and lipopolysaccharide serotype prediction tool--Kaptive were used. It just like a espansion pack of the database of this software, let more bacteria serotype prediction becoming available.
+This is a tool for rapid serotype predict for three swine bacterial pathogens, *Streptococcus suis*, *Glaesserella parasuis*, and *Actinobacillus pleuropneumoniae*. Serotyping is very important for diagnostics, epidemiology surveillance or microbiology research. Traditionally, serotyping was based on serological tests, subsequently, serotype determine locus was identified in bacteria genome, majorly polysaccharides such as lipopolysaccharide and capsular polysaccharide, for three swine bacterial pathogens focused by this tool, all of their serotype determine locus are capsular polysaccharide. Multiplex PCR replaced serological tests in many lab, and now, it time to let *in silico* methods to replace multiplex PCR.
+
+
+In this tool, we have collected all known serotype determine locus of these pathogens and made reference databases for them to let the user could high-throughput and rapidly predict the serotype of these three pathogens. It will output the serotype of your genome, the coverage and similarity, and genes homologous with reference in the cps locus of your sequence, and genes homologous with other reference in the cps locus of your sequence, and the whole length of cps of your genome.
+To aviod the uncorrected prediction, we displayed the coverage and identity of predicted serotype, if it lower than the threshold (we set as 95% prelimitarily), a "?" will be added to the end of output string of predicted serotype.
+
+
+# Why write it?
+At the beginning, I just give three reference databases of these pathogens, It could be recongnized by kaptive(https://github.com/katholt/Kaptive/), it just like a DLC for Kaptive. However, with my study of python more deeper, I have a strong motivation to write a new tool which can also do this job my own, also, for trainning my python skills (Annother reason I want to update this tool from DLC to a independent tool because I think I gave it a very good name). It gives me a strong sense of accomplishment when I realized one of my idea.
+
+
 # External Dependencies
-Kaptive https://github.com/katholt/Kaptive/
+BLAST
+Prodigal
+
+
 # Usage
-The using of this dapabase is same as Kaptive. you just need to replace the origional reference sequence file by the files we provide. Then run Kaptive. Here we give an example, if the species of your genome dataset are *Sreptococcus suis*, you just need to put ```Streptococcus_suis_cps_locus_primary_reference.gbk``` in the folder contain your genome sequence files, open a terminal and into the folder, get in the evironment if you create one by conda, and run Kaptive like this:   
+The using of this tool is very easy, put the script, a trainning file "risst.tr" and the reference file you want to use to the filefolder of your sequence.
+For example, if the species of your genome dataset are *Sreptococcus suis*, you just need to put ```Streptococcus_suis_cps_locus_reference.gbk``` and ```risst.tr``` in the folder contain your genome sequence files, open a terminal and into the folder, get in the evironment if you create one by conda, and run like this:   
 ``` Python
-kaptive.py -a *.fna -k Streptococcus_suis_cps_locus_primary_reference.gbk -o output_directory
+python RISST.py -i *.fasta -r Streptococcus_suis_cps_locus_reference.gbk
 ```
 Then wait to it finish.
-* We default to think the genome sequence file have a ".fna" suffix, if your file is not, please change the ".fna" within above command to the suffix of your file.
+* We default to think the genome sequence file have a ".fasta" suffix, if your file is not, please change the ".fna" within above command to the suffix of your file.
+
+
+# Output
+A simlified result will generated in terminal, inputfile : serotype
+![1677072974441](https://user-images.githubusercontent.com/108860907/220675856-a591a42e-0da9-47f8-8adb-e5f61b4b89db.jpg)
+A detailed table generated in work folder
+![1677073079928](https://user-images.githubusercontent.com/108860907/220676090-2e1ce8a6-f3e9-43e7-866c-9515d88880a3.jpg)
+And extract the cps locus of your inputfile
+
+
 # Further
-You can also create a reference sequence files for the bacteria you want to predict the serotypes, or other gene clusters which have different types, as the authors of Kaptive said. Just according to our template and notice that your multi-record reference sequence file should include nucleotide sequences for each whole locus and protein sequences for their genes, if you download it from NCBI, choose Genbank(full) format to download.
+You can also create a reference sequence files for the bacteria you want to predict the serotypes, or other gene clusters which have different types. Just according to our template and notice that your multi-record reference sequence file should include nucleotide sequences for each whole locus and protein sequences for their genes, if you download it from NCBI, choose Genbank(full) format to download.
