@@ -1,5 +1,5 @@
 # RISST
-Rapid In Silico SeroTyping for three common swine bacerial pathogens
+Rapid In Silico SeroTyping for three common swine bacterial pathogens
 
 
 # What is it?
