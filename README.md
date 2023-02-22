@@ -6,7 +6,7 @@ Rapid In Silico SeroTyping for three common swine bacerial pathogens
 This is a tool for rapid serotype predict for three swine bacterial pathogens, *Streptococcus suis*, *Glaesserella parasuis*, and *Actinobacillus pleuropneumoniae*. Serotyping is very important for diagnostics, epidemiology surveillance or microbiology research. Traditionally, serotyping was based on serological tests, subsequently, serotype determine locus was identified in bacteria genome, majorly polysaccharides such as lipopolysaccharide and capsular polysaccharide, for three swine bacterial pathogens focused by this tool, all of their serotype determine locus are capsular polysaccharide. Multiplex PCR replaced serological tests in many lab, and now, it time to let *in silico* methods to replace multiplex PCR.
 
 
-In this tool, we have collected all known serotype determine locus of these pathogens and made reference databases for them to let the user could high-throughput and rapidly predict the serotype of these three pathogens. It will output the serotype of your genome, the coverage and similarity, and genes homologous with reference in the cps locus of your sequence, and genes homologous with other reference in the cps locus of your sequence, and the whole length of cps of your genome.
+In this tool, we have collected all known serotype determine locus of these pathogens and made reference databases for them to let the user could high-throughput and rapidly predict the serotype of these three pathogens. It will output the serotype of your genome, the coverage and similarity, and genes homologous with reference in the cps locus of your sequence, and genes homologous with other reference in the cps locus of your sequence, and the whole length of cps of your genome. The speed of this tool is very fast, almost 1 second for 1 genome, we can see it below.
 To aviod the uncorrected prediction, we displayed the coverage and identity of predicted serotype, if it lower than the threshold (we set as 95% prelimitarily), a "?" will be added to the end of output string of predicted serotype.
 
 
@@ -32,8 +32,12 @@ Then wait to it finish.
 # Output
 A simlified result will generated in terminal, inputfile : serotype
 ![1677072974441](https://user-images.githubusercontent.com/108860907/220675856-a591a42e-0da9-47f8-8adb-e5f61b4b89db.jpg)
+
+
 A detailed table generated in work folder
 ![1677073079928](https://user-images.githubusercontent.com/108860907/220676090-2e1ce8a6-f3e9-43e7-866c-9515d88880a3.jpg)
+
+
 And extract the cps locus of your inputfile
 
 
