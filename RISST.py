@@ -75,7 +75,7 @@ def parse_inputfile(inputfile):
     return input_seq
             
 def parse_genbank(reference, tempdict):
-    # Generate a dict, with contig_name as key and contig_sequence as value
+    # Parse genbank file to fasta, and generate a dict, with serotype as key and correspond cps sequence as value
     ref_seq_name = reference.split('.')[0] + '.fasta'
     ref_seq_file = pathlib.Path(tempdict) / ref_seq_name
     path = pathlib.Path(reference).resolve()
@@ -102,7 +102,7 @@ def parse_genbank(reference, tempdict):
     return ref_seq_file, ref_dict
 
 def get_serotype(inputfile, repa, ref_dict, threads):
-    # Find the best serotype of inputfile by sequence alignment with 33 reference cps locus sequences
+    # Find the best serotype of inputfile by sequence alignment
     inpa = pathlib.Path(inputfile).resolve()
     blast_hits = run_blast(inpa, repa, threads, 'n')
     blast_result = {}
@@ -181,6 +181,7 @@ def simplify(blast_result):
     return simplified_result     
 
 def find_subject(inputfile, best_serotype, tempdict, ref_seqs_name, threads, result_cps_dict, input_seq, minimun_piece):
+    # Get the cps sequence of inputfile
     inpa = pathlib.Path(inputfile).resolve()
     current_cps = pathlib.Path(tempdict) / 'curr_cps.fasta'
     if best_serotype[-1] =='?':
@@ -202,6 +203,7 @@ def find_subject(inputfile, best_serotype, tempdict, ref_seqs_name, threads, res
     return subject_sequence_path
     
 def find_subject_location(blast_hits, input_seq, minimun_piece):
+    # Find the cps location in inputfile, consice the blast results to get whole length of cps sequence
     subject_contig_range = []
     if blast_hits[0].sseqid == blast_hits[-1].sseqid:
         cps_range = [blast_hits[0].qstart, blast_hits[0].qend]
@@ -238,6 +240,7 @@ def find_subject_location(blast_hits, input_seq, minimun_piece):
     return subject_contig_range
         
 def get_subject_cps_sequence(inputfile, subject_contig_range, result_cps_dict, input_seq):
+    # Save the matched cps sequence to a file and saved in "result_cps_dict" folder
     cps_name = 'cps_locus_of_' + inputfile
     cps_path = pathlib.Path(result_cps_dict) / cps_name
     with open(cps_path, 'wt') as file:
@@ -258,6 +261,7 @@ def get_subject_cps_sequence(inputfile, subject_contig_range, result_cps_dict, i
     return pathlib.Path(cps_path).resolve()
     
 def gene_alignment(tempdict, reference, best_serotype, subject_sequence_path, min_gene_id, min_gene_cov, threads):
+    # Screen the gene distribution of cps of inputfile
     gene_expected, other_genes = [], []
     orfs = prodigal(tempdict, subject_sequence_path)
     cur_cps_ref, other_cps_ref = parse_ref_gene(tempdict, reference, best_serotype)
@@ -307,7 +311,7 @@ def gene_alignment(tempdict, reference, best_serotype, subject_sequence_path, mi
     return gene_expected, other_genes, other_genes_counts
 
 def process_gene_result(gene_expected, other_genes):
-    # Link the AMRGs to one str for output in table
+    # Link the gene hits to one str for output in table
     expected, others = '', ''
     for i in gene_expected:
         expected += i
@@ -318,6 +322,7 @@ def process_gene_result(gene_expected, other_genes):
     return expected, others
     
 def parse_ref_gene(tempdict, reference, best_serotype):
+    # Separate the matched serotype reference cps and other reference sequences, prepared for gene screen
     if best_serotype[-1] =='?':
         best_serotype = best_serotype[:-1]
     cur_cps_ref = pathlib.Path(tempdict).resolve() / 'cur_cps_ref.fasta'
