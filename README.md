@@ -29,6 +29,23 @@ For example, if the species of your genome dataset are *Sreptococcus suis*, you 
 python RISST.py -i *.fasta -r Streptococcus_suis_cps_locus_reference.gbk
 ```
 Then wait to it finish.
+
+The usage details are listed below:
+```
+RISST [-i] [-r] [-o] [-t] [--minimun_piece] [--min_gene_cov] [--min_gene_id ] [--no_cps_sequence] [-v]
+Input and Output:
+  -i, --input             Input FASTA file
+  -r, --reference         Reference cps locus file
+  -o, --output            Output file
+Parameters:
+  -t, --threads           Threads to use for BLAST searches
+  --minimum_piece         Minimum cps match in input sequence, fragments lower than this threshold will be ignore
+  --min_gene_cov          Minimum percentage coverage to consider a single gene complete. [default: 80.0%]
+  --min_gene_id           Minimum percentage identity to consider a single gene complete. [default: 70.0%]
+  --no_cps_sequence       Suppress output of cps sequence file
+  -v, --version           Show version number and exit
+```
+
 * We default to think the genome sequence file have a ".fasta" suffix, if your file is not, please change the ".fna" within above command to the suffix of your file.
 
 
