@@ -6,7 +6,7 @@ Rapid In Silico SeroTyping for three common swine bacterial pathogens
 This is a tool for rapid serotype predict for three swine bacterial pathogens, *Streptococcus suis*, *Glaesserella parasuis*, and *Actinobacillus pleuropneumoniae*. Serotyping is very important for diagnostics, epidemiology surveillance or microbiology research. Traditionally, serotyping was based on serological tests, subsequently, serotype determine locus was identified in bacteria genome, majorly polysaccharides such as lipopolysaccharide and capsular polysaccharide, for three swine bacterial pathogens focused by this tool, all of their serotype determine locus are capsular polysaccharide. Multiplex PCR replaced serological tests in many lab, and now, it time to let *in silico* methods to replace multiplex PCR.
 
 
-In this tool, we have collected all known serotype determine locus of these pathogens and made reference databases for them to let the user could high-throughput and rapidly predict the serotype of these three pathogens. It will output the serotype of your genome, the coverage and similarity, and genes homologous with reference in the cps locus of your sequence, and genes homologous with other reference in the cps locus of your sequence, and the whole length of cps of your genome. The speed of this tool is very fast, almost 1 second for 1 genome, we can see it below.
+In this tool, we have collected all known serotype determine locus of these pathogens and made reference databases for them to let the user could high-throughput and rapidly predict the serotype of these three pathogens. It will output the serotype of your genome, the coverage and similarity, and genes homologous with reference in the cps locus of your sequence, and genes homologous with other reference in the cps locus of your sequence, and the whole length of cps of your genome， After I update the RISST to v2.1, now it could generate a gene map of cps of your inputfile. The speed of this tool is very fast, almost 1 second for 1 genome, we can see it below.
 To aviod the uncorrected prediction, we displayed the coverage and identity of predicted serotype, if it lower than the threshold (we set as 95% prelimitarily), a "?" will be added to the end of output string of predicted serotype.
 
 
@@ -32,7 +32,7 @@ Then wait to it finish.
 
 The usage details are listed below:
 ```
-RISST [-i] [-r] [-o] [-t] [--minimun_piece] [--min_gene_cov] [--min_gene_id ] [--no_cps_sequence] [-v]
+RISST [-i] [-r] [-o] [-t] [--minimun_piece] [--min_gene_cov] [--min_gene_id ] [--no_cps_sequence] [-f] [-v]
 Input and Output:
   -i, --input             Input FASTA file
   -r, --reference         Reference cps locus file
@@ -43,6 +43,7 @@ Parameters:
   --min_gene_cov          Minimum percentage coverage to consider a single gene complete. [default: 80.0%]
   --min_gene_id           Minimum percentage identity to consider a single gene complete. [default: 70.0%]
   --no_cps_sequence       Suppress output of cps sequence file
+  -f, --figure            Export the gene structure map of cps locus in inputfile
   -v, --version           Show version number and exit
 ```
 
@@ -58,7 +59,13 @@ A detailed table generated in work folder
 ![1677073079928](https://user-images.githubusercontent.com/108860907/220676090-2e1ce8a6-f3e9-43e7-866c-9515d88880a3.jpg)
 
 
-And extract the cps locus of your inputfile
+And extract the cps locus of your inputfile in filefolder "result_cps_dict"
+
+After we updated the script to v2.1, now a gene map will be export if you add a "-f" or "--figure" in the command
+
+The genes homologous with the reference cps of predicted serotype are marked by soft color, homologous with other reference cps are marked by intense color
+![gene_structure_map_of_12939](https://user-images.githubusercontent.com/108860907/221113322-2c0c11a7-0fab-409d-8ece-babf24bc3240.png)
+
 
 
 # Further
