@@ -30,6 +30,7 @@ For example, if the species of your genome dataset are *Sreptococcus suis*, you 
 python RISST.py -i *.fasta -r Streptococcus_suis_cps_locus_reference.gbk
 ```
 Then wait to it finish.
+* We default to think the genome sequence file have a ".fasta" suffix, if your file is not, please change the ".fasta" within above command to the suffix of your file.
 
 The usage details are listed below:
 ```
@@ -47,8 +48,6 @@ Parameters:
   -f, --figure            Export the gene structure map of cps locus in inputfile
   -v, --version           Show version number and exit
 ```
-
-* We default to think the genome sequence file have a ".fasta" suffix, if your file is not, please change the ".fna" within above command to the suffix of your file.
 
 
 # Output
