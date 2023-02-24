@@ -61,7 +61,7 @@ A detailed table generated in work folder
 
 And extract the cps locus of your inputfile in filefolder "result_cps_dict"
 
-After we updated the script to v2.1, now a gene map will be export if you add a "-f" or "--figure" in the command
+After we updated the script to v2.1, now a gene map will be export if you add a "-f" or "--figure" in the command in filefoler "gene_structure_map"
 
 The genes homologous with the reference cps of predicted serotype are marked by soft color, homologous with other reference cps are marked by intense color
 ![gene_structure_map_of_12939](https://user-images.githubusercontent.com/108860907/221113322-2c0c11a7-0fab-409d-8ece-babf24bc3240.png)
