@@ -13,9 +13,11 @@ import subprocess
 import time
 import shutil
 import re
+import random
 from Bio import SeqIO
+from dna_features_viewer import GraphicFeature, GraphicRecord
 
-__version__ = '2.0'
+__version__ = '2.1'
 
 def get_argument():
     # Parsers
@@ -40,6 +42,7 @@ def get_argument():
     parser_group_2.add_argument('--min_gene_id', required = False, type = float, default = 70.0, 
                                help = 'Minimum percentage identity to consider a single gene complete. [default: 70.0%]')
     parser_group_2.add_argument('--no_cps_sequence', action = 'store_true', help = 'Suppress output of cps sequence file')
+    parser_group_2.add_argument('-f', '--figure', action = 'store_true', help = 'Export the gene structure map of cps locus in inputfile')
     parser_group_2.add_argument('-v', '--version', action = 'version', version = 'BacSpecies v' + __version__, 
                         help = 'Show version number and exit')
     return parser
@@ -199,8 +202,8 @@ def find_subject(inputfile, best_serotype, tempdict, ref_seqs_name, threads, res
         print('Error: No homologous cps found, please check the species of {}'.format(inputfile))
         sys.exit(1)
     subject_contig_range = find_subject_location(blast_hits, input_seq, minimun_piece)
-    subject_sequence_path = get_subject_cps_sequence(inputfile, subject_contig_range, result_cps_dict, input_seq)
-    return subject_sequence_path
+    subject_sequence_path, sub_cps_length = get_subject_cps_sequence(inputfile, subject_contig_range, result_cps_dict, input_seq)
+    return subject_sequence_path, sub_cps_length
     
 def find_subject_location(blast_hits, input_seq, minimun_piece):
     # Find the cps location in inputfile, consice the blast results to get whole length of cps sequence
@@ -242,6 +245,7 @@ def find_subject_location(blast_hits, input_seq, minimun_piece):
 def get_subject_cps_sequence(inputfile, subject_contig_range, result_cps_dict, input_seq):
     # Save the matched cps sequence to a file and saved in "result_cps_dict" folder
     cps_name = 'cps_locus_of_' + inputfile
+    sub_cps_length = 0
     cps_path = pathlib.Path(result_cps_dict) / cps_name
     with open(cps_path, 'wt') as file:
         for i in subject_contig_range:
@@ -249,6 +253,7 @@ def get_subject_cps_sequence(inputfile, subject_contig_range, result_cps_dict, i
             file.write(str(i[0]) + '_' + str(i[1]) + '_' + str(i[2]) + '_' + str(i[3]))
             file.write('\n')
             cps_gene = str(input_seq[i[0]][i[1]:i[2]])
+            sub_cps_length += len(cps_gene)
             gene_for_write = ''
             while len(cps_gene) > 60:
                 gene_for_write += cps_gene[:60] + '\n'
@@ -258,7 +263,7 @@ def get_subject_cps_sequence(inputfile, subject_contig_range, result_cps_dict, i
                 gene_for_write += '\n'
             file.write(gene_for_write)
             file.write('\n')
-    return pathlib.Path(cps_path).resolve()
+    return pathlib.Path(cps_path).resolve(), sub_cps_length
     
 def gene_alignment(tempdict, reference, best_serotype, subject_sequence_path, min_gene_id, min_gene_cov, threads):
     # Screen the gene distribution of cps of inputfile
@@ -302,13 +307,15 @@ def gene_alignment(tempdict, reference, best_serotype, subject_sequence_path, mi
                 other_genes.append(best_match)
             else:
                 continue
+        orf.mapname = best_match
+        orf.serotype = best_match.strip('cps').split('_')[0]
     pathlib.Path(inpa).unlink()
     other_genes_counts = len(other_genes)
     if best_serotype[-1] =='?':
         best_serotype = best_serotype[:-1]
     pathlib.Path(cur_cps_ref).unlink()
     pathlib.Path(other_cps_ref).unlink()
-    return gene_expected, other_genes, other_genes_counts
+    return gene_expected, other_genes, other_genes_counts, orfs
 
 def process_gene_result(gene_expected, other_genes):
     # Link the gene hits to one str for output in table
@@ -386,7 +393,7 @@ def group_prodigal(raw_orfs):
             orfs.append(Orf(contig, *result))
     return orfs
 
-class Orf:
+class Orf(object):
     # Parse the prodigal results
     def __init__(self, contig, start, end, strand):
         self.contig = contig
@@ -394,6 +401,8 @@ class Orf:
         self.end = int(end)
         self.strand = strand
         self.sequence = str()
+        self.mapname = ''
+        self.serotype = ''
     
 def run_blast(inpa, repa, threads, setting):
     # Do blast, iterator the result to a list
@@ -441,6 +450,62 @@ class BlastResult(object):
         self.query_cov = 100.0 * len(parts[11]) / float(parts[10])
         self.x_query_cov = 300.0 * len(parts[11]) / float(parts[10])
 
+def draw_gene_map(inputfile, best_serotype, orfs, sub_cps_length):
+    # Export a gene structure map
+    map_dict = pathlib.Path(inputfile).parent / 'gene_structure_map'
+    if not pathlib.Path(map_dict).is_dir():
+        pathlib.Path.mkdir(map_dict)
+    inputfile = strip_suffix(inputfile)
+    map_name = 'gene_structure_map_of_' + inputfile + '.png'
+    map_path = pathlib.Path(map_dict) / map_name
+    if best_serotype[-1] =='?':
+        best_serotype = best_serotype[:-1]
+    soft_color_database = ['#99CCCC', '#FFFFCC', '#FFCC99', '#CCFFFF', '#CCCCFF', '#FFCCCC', '#CCFFCC']
+    light_color_database = ['#FF0033', '#CCFF00', '#0099CC', '#009966', '#CC3399']
+    features = []
+    orf_contig = ''
+    orf_length_all = 0
+    orf_length_for_one_contig = 0
+    direction = orfs[0].strand
+    for orf in orfs:
+        orf_color = ''
+        if best_serotype == orf.serotype:
+            orf_color = random.choice(soft_color_database)
+        else:
+            orf_color = random.choice(light_color_database)
+        if orf_contig and orf.contig != orf_contig:
+            orf_length_all += orf_length_for_one_contig
+        orf_length_for_one_contig = orf.end
+        orf_contig = orf.contig
+        orf.start += orf_length_all
+        orf.end += orf_length_all
+        if direction == '+':
+            if orf.strand == '+':
+                orf_strand = +1
+            else:
+                orf_strand = -1
+        elif direction == '-':
+            if orf.strand == '+':
+                orf_strand = -1
+            else:
+                orf_strand = +1
+        features.append(GraphicFeature(start = orf.start, end = orf.end, strand = orf_strand, color = orf_color, label = orf.mapname))
+    record = GraphicRecord(sequence_length = sub_cps_length, features = features)
+    ax, _ = record.plot(figure_width = 20)
+    ax.figure.savefig(map_path, dpi = 600)
+
+def strip_suffix(inputfile):
+    # Strip the suffix of inputfile
+    if inputfile.lower().endswith('.fa'):
+        inputfile = inputfile[:-3]
+    elif inputfile.lower().endswith('.fna'):
+        inputfile = inputfile[:-4]
+    elif inputfile.lower().endswith('.fas'):
+        inputfile = inputfile[:-4]
+    elif inputfile.lower().endswith('.fasta'):
+        inputfile = inputfile[:-6]
+    return inputfile
+
 def generate_output(output):
     # Generate a blank output table file
     if pathlib.Path(output).is_file():
@@ -470,10 +535,12 @@ def main():
     for inputfile in args.input:
         input_seq = parse_inputfile(inputfile)
         serotype, sero_coverage, sero_identity = get_serotype(inputfile, ref_seqs_name, ref_dict, args.threads)
-        subject_sequence_path = find_subject(inputfile, serotype, tempdict, ref_seqs_name, args.threads, result_cps_dict, input_seq, args.minimun_piece)
-        gene_expected, other_genes, other_genes_counts = gene_alignment(tempdict, args.reference, serotype, subject_sequence_path, args.min_gene_id, args.min_gene_cov, args.threads)
+        subject_sequence_path, sub_cps_length = find_subject(inputfile, serotype, tempdict, ref_seqs_name, args.threads, result_cps_dict, input_seq, args.minimun_piece)
+        gene_expected, other_genes, other_genes_counts, orfs = gene_alignment(tempdict, args.reference, serotype, subject_sequence_path, args.min_gene_id, args.min_gene_cov, args.threads)
         expected_genes, genes_from_other_cps = process_gene_result(gene_expected, other_genes)
     # Generate output
+        if args.figure:
+            draw_gene_map(inputfile, serotype, orfs, sub_cps_length)
         generate_output(args.output)
         output(args.output, inputfile, serotype, sero_coverage, sero_identity, expected_genes, other_genes_counts, genes_from_other_cps)
     shutil.rmtree(tempdict)
