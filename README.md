@@ -17,10 +17,11 @@ The write of this tool is inspired by Kaptive and Hicap, but not duplicate of th
 
 
 # External Dependencies
-BLAST
+BLAST+
 
-Prodigal
+Prodigal (https://github.com/hyattpd/Prodigal)
 
+DNA features Viewer (https://github.com/Edinburgh-Genome-Foundry/DnaFeaturesViewer)
 
 # Usage
 The using of this tool is very easy, put the script, a trainning file "risst.tr" and the reference file you want to use to the filefolder of your sequence.
