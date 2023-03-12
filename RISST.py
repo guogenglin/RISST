@@ -35,7 +35,7 @@ def get_argument():
     # Parameters
     parser_group_2.add_argument('-t', '--threads', required = False, type = int, default = min(multiprocessing.cpu_count(), 4), 
                         help = 'Threads to use for BLAST searches')
-    parser.add_argument('--minimun_piece', type = int, required = False, default = 200,
+    parser_group_2.add_argument('--minimum_piece', type = int, required = False, default = 200,
                         help='minimum cps match in input sequence, fragments lower than this threshold will be ignore')
     parser_group_2.add_argument('--min_gene_cov', required = False, type = float, default = 80.0, 
                                help = 'Minimum percentage coverage to consider a single gene complete. [default: 80.0%]')
@@ -183,7 +183,7 @@ def simplify(blast_result):
         simplified_result[key] = simplified_list
     return simplified_result     
 
-def find_subject(inputfile, best_serotype, tempdict, ref_seqs_name, threads, result_cps_dict, input_seq, minimun_piece):
+def find_subject(inputfile, best_serotype, tempdict, ref_seqs_name, threads, result_cps_dict, input_seq, minimum_piece):
     # Get the cps sequence of inputfile
     inpa = pathlib.Path(inputfile).resolve()
     current_cps = pathlib.Path(tempdict) / 'curr_cps.fasta'
@@ -201,11 +201,11 @@ def find_subject(inputfile, best_serotype, tempdict, ref_seqs_name, threads, res
     if not blast_hits:
         print('Error: No homologous cps found, please check the species of {}'.format(inputfile))
         sys.exit(1)
-    subject_contig_range = find_subject_location(blast_hits, input_seq, minimun_piece)
+    subject_contig_range = find_subject_location(blast_hits, input_seq, minimum_piece)
     subject_sequence_path, sub_cps_length = get_subject_cps_sequence(inputfile, subject_contig_range, result_cps_dict, input_seq)
     return subject_sequence_path, sub_cps_length
     
-def find_subject_location(blast_hits, input_seq, minimun_piece):
+def find_subject_location(blast_hits, input_seq, minimum_piece):
     # Find the cps location in inputfile, consice the blast results to get whole length of cps sequence
     subject_contig_range = []
     if blast_hits[0].sseqid == blast_hits[-1].sseqid:
@@ -213,7 +213,7 @@ def find_subject_location(blast_hits, input_seq, minimun_piece):
         final_sstart = 0
         final_send = 0
         for hit in blast_hits:
-            if hit.length <= minimun_piece:
+            if hit.length <= minimum_piece:
                 continue
             elif hit.qstart > min(cps_range) and hit.qend < max(cps_range):
                 continue
@@ -227,7 +227,7 @@ def find_subject_location(blast_hits, input_seq, minimun_piece):
         cps_range = [blast_hits[0].qstart, blast_hits[0].qend]
         sseqid, sstart, send, strand = [], [], [], []
         for hit in blast_hits:
-            if hit.length <= minimun_piece:
+            if hit.length <= minimum_piece:
                 continue
             elif hit.qstart > min(cps_range) and hit.qend < max(cps_range):
                 continue
@@ -535,7 +535,7 @@ def main():
     for inputfile in args.input:
         input_seq = parse_inputfile(inputfile)
         serotype, sero_coverage, sero_identity = get_serotype(inputfile, ref_seqs_name, ref_dict, args.threads)
-        subject_sequence_path, sub_cps_length = find_subject(inputfile, serotype, tempdict, ref_seqs_name, args.threads, result_cps_dict, input_seq, args.minimun_piece)
+        subject_sequence_path, sub_cps_length = find_subject(inputfile, serotype, tempdict, ref_seqs_name, args.threads, result_cps_dict, input_seq, args.minimum_piece)
         gene_expected, other_genes, other_genes_counts, orfs = gene_alignment(tempdict, args.reference, serotype, subject_sequence_path, args.min_gene_id, args.min_gene_cov, args.threads)
         expected_genes, genes_from_other_cps = process_gene_result(gene_expected, other_genes)
     # Generate output
