@@ -44,7 +44,7 @@ def get_argument():
                                help = 'Minimum percentage identity to consider a single gene complete. [default: 70.0%]')
     parser_group_2.add_argument('--no_cps_sequence', action = 'store_true', help = 'Suppress output of cps sequence file')
     parser_group_2.add_argument('-f', '--figure', action = 'store_true', help = 'Export the gene structure map of cps locus in inputfile')
-    parser_group_2.add_argument('-v', '--version', action = 'version', version = 'BacSpecies v' + __version__, 
+    parser_group_2.add_argument('-v', '--version', action = 'version', version = 'RISST v' + __version__, 
                         help = 'Show version number and exit')
     return parser
 
