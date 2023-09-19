@@ -526,7 +526,7 @@ def output(output, inputfile, serotype, sero_coverage, sero_identity, expected_g
         file.write('\n')
 
 def main():
-    print('If you have any quesions or suggestions for RISST, please contact Genglin Guo, e-mail: 2019207025@njau.edu.cn')
+    print('If you have any questions or suggestions for RISST, please contact Genglin Guo, e-mail: 2019207025@njau.edu.cn')
     starttime = time.perf_counter()
     # Initialize
     args = get_argument().parse_args()
