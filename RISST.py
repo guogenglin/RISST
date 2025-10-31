@@ -416,19 +416,9 @@ def run_blast(inpa, repa, threads, setting):
                    '6 qseqid sseqid qstart qend sstart send evalue bitscore length pident qlen qseq']
     process = subprocess.run(command, stdout = subprocess.PIPE, stderr = subprocess.PIPE)
     out = process.stdout.decode()
-    for line in line_iterator(out):
+    for line in out.strip().split('\n'):
         blast_hits.append(BlastResult(line))
     return blast_hits
-
-def line_iterator(line_breaks):
-    # Handle the BLAST output and remove the line breaks 
-    line = -1
-    while True:
-        nextline = line_breaks.find('\n', line + 1)
-        if nextline < 0:
-            break
-        yield line_breaks[line + 1:nextline]
-        line = nextline
 
 class BlastResult(object):
     # Handle the BLAST output
@@ -555,3 +545,4 @@ def main():
     print('Total time consumed : {:.1f}h{:.1f}m{:.1f}s'.format(endtime // 3600, endtime % 3600 // 60, endtime % 60))
    
 main()
+
