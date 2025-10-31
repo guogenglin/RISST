@@ -16,7 +16,6 @@ import shutil
 import re
 import random
 from Bio import SeqIO
-from dna_features_viewer import GraphicFeature, GraphicRecord
 
 __version__ = '2.1'
 
@@ -532,6 +531,7 @@ def main():
         expected_genes, genes_from_other_cps = process_gene_result(gene_expected, other_genes)
     # Generate output
         if args.figure:
+            from dna_features_viewer import GraphicFeature, GraphicRecord
             draw_gene_map(inputfile, serotype, orfs, sub_cps_length)
         generate_output(args.output)
         output(args.output, inputfile, serotype, sero_coverage, sero_identity, expected_genes, other_genes_counts, genes_from_other_cps)
@@ -545,4 +545,5 @@ def main():
     print('Total time consumed : {:.1f}h{:.1f}m{:.1f}s'.format(endtime // 3600, endtime % 3600 // 60, endtime % 60))
    
 main()
+
 
