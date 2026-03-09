@@ -382,15 +382,22 @@ def group_prodigal(raw_orfs):
     contig = ''
     RESULT_RE = re.compile(r'^>[0-9]+_([0-9]+)_([0-9]+)_([-+])$')
     CONTIG_RE = re.compile(r'^# Sequence.+?seqhdr="(.+?)"(?:;|$)')
+
     for line in raw_orfs.rstrip().split('\n'):
+
         if line.startswith('# Sequence Data'):
             name = CONTIG_RE.match(line).group(1)
             contig = name.split(' ')[0]
+
         elif line.startswith('# Model Data'):
             continue
+
         else:
-            result = RESULT_RE.match(line).groups()
-            orfs.append(Orf(contig, *result))
+            m = RESULT_RE.match(line)
+            if m:
+                result = m.groups()
+                orfs.append(Orf(contig, *result))
+
     return orfs
 
 class Orf(object):
