@@ -11,9 +11,7 @@ To aviod the uncorrected prediction, we displayed the coverage and identity of p
 
 
 # Why write it?
-At the beginning, I just give three reference databases of these pathogens, It could be recongnized by Kaptive(https://github.com/katholt/Kaptive/), it just like a DLC for Kaptive. However, with my study of python more deeper, I have a strong motivation to write a new tool which can also do this job my own, also, for trainning my python skill (Annother reason I want to update this tool from DLC to a independent tool because I think I gave it a very good name). It gives me a strong sense of accomplishment when I realized one of my idea.
-
-The write of this tool is inspired by Kaptive and Hicap, but not duplicate of them, the calculation logics of output was thought by my own, you can find out from my redundant code, the major aim to write this tool is trainning my python skill, so if anyone used this tool and give me some advices I will be very grateful!
+At the beginning, I just give three reference databases of these pathogens, It could be recongnized by Kaptive(https://github.com/katholt/Kaptive/), it just like a DLC for Kaptive. However, with my study of python more deeper, I want to try to write a tool by myself for trainning my python skill (Annother reason I want to update this tool from DLC to a independent tool because I think I gave it a very good name), even some logic still similar with Kaptive. It gives me a strong sense of accomplishment when I realized one of my idea.
 
 
 # External Dependencies
