@@ -76,7 +76,7 @@ FEATURES             Location/Qualifiers
                      /db_xref="taxon:738"
                      /geo_loc_name="China:Hubei, Huangshi"
                      /collection_date="2017-03"
-                     /note="K locus: 1"
+                     /note="Serovar: 1"
      gene            1..582
                      /locus_tag="P9J75_RS00885"
                      /old_locus_tag="P9J75_00885"
@@ -962,7 +962,7 @@ FEATURES             Location/Qualifiers
                      /lat_lon="35.31 N 113.85 E"
                      /collection_date="2018-09-18"
                      /collected_by="lung"
-                     /note="K locus: 2"
+                     /note="Serovar: 2"
      gene            1..582
                      /locus_tag="J1G50_RS07525"
                      /old_locus_tag="J1G50_07525"
@@ -1908,7 +1908,7 @@ FEATURES             Location/Qualifiers
                      /db_xref="taxon:1275966"
                      /country="Japan"
                      /collection_date="1986"
-                     /note="K locus: 3"
+                     /note="Serovar: 3"
      gene            1..582
                      /locus_tag="HPSSW114_RS05650"
                      /old_locus_tag="HPSSW114_1195"
@@ -2630,7 +2630,7 @@ FEATURES             Location/Qualifiers
                      /lat_lon="34.76 N 113.65 E"
                      /collection_date="2018-10-16"
                      /collected_by="lung"
-                     /note="K locus: 4"
+                     /note="Serovar: 4"
      gene            1..582
                      /locus_tag="J1G47_RS04040"
                      /old_locus_tag="J1G47_04040"
@@ -3237,7 +3237,7 @@ FEATURES             Location/Qualifiers
                      /db_xref="taxon:1117322"
                      /geo_loc_name="Japan"
                      /collection_date="1986"
-                     /note="K locus: 5"
+                     /note="Serovar: 5"
      gene            1..582
                      /locus_tag="A2U21_RS08220"
                      /old_locus_tag="A2U21_07940"
@@ -3894,7 +3894,7 @@ FEATURES             Location/Qualifiers
                      /host="Sus scrofa domesticus"
                      /db_xref="taxon:738"
                      /geo_loc_name="Japan"
-                     /note="K locus: 6"
+                     /note="Serovar: 6"
      gene            1..582
                      /locus_tag="ASO60_RS03100"
      CDS             1..582
@@ -4625,7 +4625,7 @@ FEATURES             Location/Qualifiers
                      /db_xref="taxon:738"
                      /collection_date="2016-10"
                      /collected_by="Jiahui An"
-                     /note="K locus: 7"
+                     /note="Serovar: 7"
      gene            1..582
                      /locus_tag="G5C59_RS04770"
                      /old_locus_tag="G5C59_04740"
@@ -5519,7 +5519,7 @@ FEATURES             Location/Qualifiers
                      /db_xref="taxon:738"
                      /geo_loc_name="China: Henan"
                      /collection_date="2017-05-04"
-                     /note="K locus: 8"
+                     /note="Serovar: 8"
      gene            1..582
                      /locus_tag="HQ939_RS03900"
                      /old_locus_tag="HQ939_03905"
@@ -6329,7 +6329,7 @@ FEATURES             Location/Qualifiers
                      /db_xref="taxon:1275971"
                      /geo_loc_name="Sweden"
                      /collection_date="1992"
-                     /note="K locus: 9"
+                     /note="Serovar: 9"
      gene            1..582
                      /locus_tag="A2U20_RS03760"
                      /old_locus_tag="A2U20_03720"
@@ -7105,7 +7105,7 @@ FEATURES             Location/Qualifiers
                      /db_xref="taxon:738"
                      /geo_loc_name="China:Hebei, Xingtai"
                      /collection_date="2019-12"
-                     /note="K locus: 10"
+                     /note="Serovar: 10"
      gene            1..582
                      /locus_tag="QAA08_RS03850"
                      /old_locus_tag="QAA08_03850"
@@ -7897,7 +7897,7 @@ FEATURES             Location/Qualifiers
                      /db_xref="taxon:1275970"
                      /geo_loc_name="Germany"
                      /collection_date="1992"
-                     /note="K locus: 11"
+                     /note="Serovar: 11"
      gene            1..582
                      /locus_tag="HPSH465_RS00135"
                      /old_locus_tag="HPSH465_0009"
@@ -8736,7 +8736,7 @@ FEATURES             Location/Qualifiers
                      /serovar="13"
                      /db_xref="taxon:1437068"
                      /geo_loc_name="USA"
-                     /note="K locus: 13"
+                     /note="Serovar: 13"
      gene            1..582
                      /locus_tag="Y054_RS0111260"
      CDS             1..582
@@ -8865,7 +8865,7 @@ FEATURES             Location/Qualifiers
                      gene prediction method: GeneMarkS-2+."
                      /codon_start=1
                      /transl_table=11
-                     /product="	oligosaccharide repeat unit polymerase"
+                     /product="oligosaccharide repeat unit polymerase"
                      /protein_id="WP_021112140.1"
                      /translation="MVLVLLNLLKVMSSYINNKLECLVVFFSIAVSSLALEFHLFNWY
                      MELSFAGFFLLMFYAFTRNSQIKLIRIEIDIYWLLLFCFSFSGMFFSVFNIDYIYFLK
@@ -9444,7 +9444,7 @@ FEATURES             Location/Qualifiers
                      /db_xref="taxon:738"
                      /geo_loc_name="China: Xinjiang"
                      /collection_date="2018"
-                     /note="K locus: 14"
+                     /note="Serovar: 14"
      gene            1..582
                      /locus_tag="Q7Y60_00790"
      CDS             1..582
@@ -10258,7 +10258,7 @@ FEATURES             Location/Qualifiers
                      /db_xref="taxon:1275969"
                      /geo_loc_name="USA"
                      /collection_date="1992"
-                     /note="K locus: 15"
+                     /note="Serovar: 15"
      gene            1..582
                      /locus_tag="HPS8415995_RS00020"
                      /old_locus_tag="HPS8415995_0004"

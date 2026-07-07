@@ -134,7 +134,7 @@ def get_serotype(inputfile, repa, ref_dict, threads):
             best_identity = identity
     if not best_serotype:
         best_serotype = 'NA'
-    if best_coverage <= 95.0:
+    if best_coverage <= 95.0 or best_identity <= 95.0:
         best_serotype += '?'
     if best_identity > 100.00:
         best_identity = 100.00
@@ -420,10 +420,10 @@ def run_blast(inpa, repa, threads, setting):
     else:
         command = ['blastx', '-query', repa, '-subject', inpa, '-outfmt', 
                    '6 qseqid sseqid qstart qend sstart send evalue bitscore length pident qlen qseq']
-    process = subprocess.run(command, stdout = subprocess.PIPE, stderr = subprocess.PIPE)
-    out = process.stdout.decode()
-    for line in out.strip().split('\n'):
-        blast_hits.append(BlastResult(line))
+    process = subprocess.run(command, stdout = subprocess.PIPE, stderr = subprocess.PIPE, text = True)
+    for line in process.stdout.splitlines():
+        if line:
+            blast_hits.append(BlastResult(line))
     return blast_hits
 
 class BlastResult(object):
