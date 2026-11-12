@@ -16,8 +16,7 @@ I started by putting together three reference databases for use with
 [Kaptive](https://github.com/katholt/Kaptive). As I learned more Python, I wanted
 to see whether I could turn those databases into a standalone tool. I also
 liked the name RISST, and it was satisfying to see the idea become a program
-I could use. The current typing workflow is adapted from leptyper by Genglin Guo, which draws
-on Kaptive. See [LICENSE](LICENSE).
+I could use.
 
 ## Dependencies
 
