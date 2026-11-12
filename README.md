@@ -1,70 +1,166 @@
 # RISST
-Rapid In Silico SeroTyping for three common swine bacterial pathogens
 
+Rapid In Silico SeroTyping predicts capsular serotypes from assembled genomes
+of *Streptococcus suis*, *Glaesserella parasuis*, and *Actinobacillus
+pleuropneumoniae*. Choose one GenBank reference database for each run.
 
-# What is it?
-This is a tool for rapid serotype predict for three swine bacterial pathogens, *Streptococcus suis*, *Glaesserella parasuis*, and *Actinobacillus pleuropneumoniae*. Serotyping is very important for diagnostics, epidemiology surveillance or microbiology research. Traditionally, serotyping was based on serological tests, subsequently, serotype determine locus was identified in bacteria genome, majorly polysaccharides such as lipopolysaccharide and capsular polysaccharide, for three swine bacterial pathogens focused by this tool, all of their serotype determine locus are capsular polysaccharide. Multiplex PCR replaced serological tests in many lab, and now, it time to let *in silico* methods to replace multiplex PCR.
+Serotyping is useful in diagnostics, epidemiological surveillance, and
+microbiology research. For these three swine pathogens, the loci used for
+typing encode capsular polysaccharide (CPS). RISST uses curated CPS references
+to screen genome assemblies in batches and reports the evidence behind each
+candidate call, including coverage, identity, and the genes found in the locus.
 
+## Why I wrote RISST
 
-In this tool, we have collected all known serotype determine locus of these pathogens and made reference databases for them to let the user could high-throughput and rapidly predict the serotype of these three pathogens. It will output the serotype of your genome, the coverage and similarity, and genes homologous with reference in the cps locus of your sequence, and genes homologous with other reference in the cps locus of your sequence, and the whole length of cps of your genome, After I update the RISST to v2.1, now it could generate a gene map of cps of your inputfile. The speed of this tool is very fast, almost 1 second for 1 genome, we can see it below.
-To aviod the uncorrected prediction, we displayed the coverage and identity of predicted serotype, if it lower than the threshold (we set as 95% prelimitarily), a "?" will be added to the end of output string of predicted serotype.
+I started by putting together three reference databases for use with
+[Kaptive](https://github.com/katholt/Kaptive). As I learned more Python, I wanted
+to see whether I could turn those databases into a standalone tool. I also
+liked the name RISST, and it was satisfying to see the idea become a program
+I could use. The current typing workflow is adapted from leptyper by Genglin Guo, which draws
+on Kaptive. See [LICENSE](LICENSE).
 
+## Dependencies
 
-# Why write it?
-At the beginning, I just give three reference databases of these pathogens, It could be recongnized by Kaptive(https://github.com/katholt/Kaptive/), it just like a DLC for Kaptive. However, with my study of python more deeper, I want to try to write a tool by myself for trainning my python skill (Annother reason I want to update this tool from DLC to a independent tool because I think I gave it a very good name), even some logic still similar with Kaptive. It gives me a strong sense of accomplishment when I realized one of my idea.
+- Python 3.10 or later
+- minimap2 available on `PATH`
+- Biopython 1.85 or later and NumPy
+- Matplotlib 3.6 or later for `-f` gene maps
 
-
-# External Dependencies
-BLAST+
-
-Prodigal (https://github.com/hyattpd/Prodigal)
-
-DNA features Viewer (https://github.com/Edinburgh-Genome-Foundry/DnaFeaturesViewer)
-
-# Usage
-The using of this tool is very easy, put the script, a trainning file "risst.tr" and the reference file you want to use to the filefolder of your sequence.
-For example, if the species of your genome dataset are *Sreptococcus suis*, you just need to put ```Streptococcus_suis_cps_locus_reference.gbk``` and ```risst.tr``` in the folder contain your genome sequence files, open a terminal and into the folder, get in the evironment if you create one by conda, and run like this:   
-``` Python
-python RISST.py -i *.fasta -r Streptococcus_suis_cps_locus_reference.gbk
-```
-Then wait to it finish.
-* We default to think the genome sequence file have a ".fasta" suffix, if your file is not, please change the ".fasta" within above command to the suffix of your file.
-
-The usage details are listed below:
-```
-RISST [-i] [-r] [-o] [-t] [--minimun_piece] [--min_gene_cov] [--min_gene_id ] [--no_cps_sequence] [-f] [-v]
-Input and Output:
-  -i, --input             Input FASTA file
-  -r, --reference         Reference cps locus file
-  -o, --output            Output file
-Parameters:
-  -t, --threads           Threads to use for BLAST searches
-  --minimum_piece         Minimum cps match in input sequence, fragments lower than this threshold will be ignore
-  --min_gene_cov          Minimum percentage coverage to consider a single gene complete. [default: 80.0%]
-  --min_gene_id           Minimum percentage identity to consider a single gene complete. [default: 70.0%]
-  --no_cps_sequence       Suppress output of cps sequence file
-  -f, --figure            Export the gene structure map of cps locus in inputfile
-  -v, --version           Show version number and exit
+```sh
+python -m pip install "biopython>=1.85" numpy
+# For gene maps
+python -m pip install "matplotlib>=3.6"
 ```
 
+RISST 3 replaces BLAST+ and Prodigal with minimap2. The `risst.tr` training
+file is obsolete.
 
-# Output
-A simlified result will generated in terminal, inputfile : serotype
-![1677072974441](https://user-images.githubusercontent.com/108860907/220675856-a591a42e-0da9-47f8-8adb-e5f61b4b89db.jpg)
+## Usage
 
+```text
+python RISST.py -i INPUT [INPUT ...] -r REFERENCE [-o OUTPUT] [-t THREADS]
+                [--min_locus_cov PCT] [--min_locus_id PCT] [--min-cov PCT]
+                [--n-best N] [--percent-expected PCT] [--no_cps_sequence]
+                [-f] [-v] [-h]
+```
 
-A detailed table generated in work folder
-![1677073079928](https://user-images.githubusercontent.com/108860907/220676090-2e1ce8a6-f3e9-43e7-866c-9515d88880a3.jpg)
+| Option | Description |
+| --- | --- |
+| `-i`, `--input` | One or more FASTA or FASTA.gz assemblies. Quoted glob patterns also work. |
+| `-r`, `--reference` | GenBank file with CDS features and a unique `K locus:`, `O locus:`, or `Serovar:` source note per record. |
+| `-o`, `--output` | Output TSV. Defaults to `RISST_output.txt`. |
+| `-t`, `--threads` | Threads for minimap2. Defaults to the available CPU count, capped at 4. |
+| `--min_locus_cov`, `--min_locus_id` | Minimum expected-gene nucleotide coverage and mean protein identity, respectively. Both default to 95%. |
+| `--min-cov` | Minimum CDS alignment coverage for scoring candidate loci. Defaults to 50%. |
+| `--n-best` | Maximum number of candidates to align as full loci. Defaults to 2. |
+| `--percent-expected` | A typeable call requires more than this percentage of distinct expected CDS inside the locus. Defaults to 50%. |
+| `--no_cps_sequence` | Skip CPS FASTA export. |
+| `-f`, `--figure` | Export a 300 dpi PNG and an editable SVG for each sample with reconstructed fragments. |
+| `-v`, `--version` | Print the version and exit. |
+| `-h`, `--help` | Show command-line help. |
 
+The old `--minimum_piece`, `--min_gene_cov`, and `--min_gene_id` flags have
+been retired. Candidate screening uses `--min-cov`. The final call uses the
+locus and expected-gene thresholds above.
 
-And extract the cps locus of your inputfile in filefolder "result_cps_dict"
+### Reference databases
 
-After we updated the script to v2.1, now a gene map will be export if you add a "-f" or "--figure" in the command in filefoler "gene_structure_map"
+| Species | Reference |
+| --- | --- |
+| *Streptococcus suis* | [CPS reference](Streptococcus_suis_cps_locus_reference.gbk) |
+| *Glaesserella parasuis* | [Primary CPS reference](Glaesserella_parasuis/Glaesserella_parasuis_cps_locus_primary_reference.gbk) |
+| *Actinobacillus pleuropneumoniae* | [CPS reference](A_pleuropneumoniae_cps_locus_reference.gbk) |
 
-The genes homologous with the reference cps of predicted serotype are marked by soft color, homologous with other reference cps are marked by intense color
-![gene_structure_map_of_12939](https://user-images.githubusercontent.com/108860907/221113322-2c0c11a7-0fab-409d-8ece-babf24bc3240.png)
+### Quick start
 
+From the RISST directory, replace `path/to/assemblies/` with the directory
+containing your *G. parasuis* FASTA files. For a different species, select its
+reference from the table above.
 
+```sh
+python RISST.py -i "path/to/assemblies/*.fasta" -r Glaesserella_parasuis/Glaesserella_parasuis_cps_locus_primary_reference.gbk -o results/serotypes.tsv -f
+```
 
-# Further
-You can also create a reference sequence files for the bacteria you want to predict the serotypes, or other gene clusters which have different types. Just according to our template and notice that your multi-record reference sequence file should include nucleotide sequences for each whole locus and protein sequences for their genes, if you download it from NCBI, choose Genbank(full) format to download.
+## Serotype prediction
+
+Minimap2 first aligns the reference CDS sequences to each assembly. RISST ranks
+candidate loci by the sum of their CDS alignment scores weighted by the fraction
+of expected genes found. It then aligns the top candidates as full loci,
+reconstructs fragments from the best match, and evaluates CDS hits by protein
+alignment.
+
+## Output
+
+RISST prints one call per sample to the terminal. The examples below come
+from a run with the *G. parasuis* primary reference and default typing
+thresholds. The repository includes the example report excerpts and gene map.
+
+```text
+GCA_000021885.1 : serotype 5
+GCA_009796465.1 : serotype 5
+GCA_000478405.1 : serotype 4?
+```
+
+### TSV report
+
+RISST rewrites the TSV on each run and writes one row per input assembly. The
+first seven columns of the example output are shown below.
+
+| Sample | Best serotype | Confidence | Expected gene nucleotide coverage (%) | Expected gene mean protein identity (%) | Locus pieces | Problems |
+| --- | --- | --- | ---: | ---: | ---: | --- |
+| GCA_000021885.1 | 5 | Typeable | 99.79 | 98.96 | 1 | |
+| GCA_009796465.1 | 5 | Typeable | 99.80 | 98.72 | 2 | `?2!` |
+| GCA_000478405.1 | 4? | Untypeable | 99.90 | 93.11 | 1 | |
+
+A question mark on the serotype marks a candidate that fell below a typing
+threshold. In the last row, 93.11% mean protein identity is below the default
+95% threshold. The second row shows that a locus can be typeable even when
+it spans two fragments. RISST reports `NA` and `Untypeable` when it finds no
+usable match, then continues with the next assembly.
+
+Expected-gene nucleotide coverage divides the summed lengths of expected CDS
+hits inside the reconstructed fragments by the total expected reference CDS
+length. Multiple hits can raise this value above 100%. Mean protein identity
+averages the protein alignment identities of those hits. RISST 2 reported
+whole-locus BLAST percentages.
+
+The remaining columns list expected and other-locus gene hits inside and
+outside the reconstructed fragments, plus missing expected genes. Hit entries
+include protein identity, protein coverage, assembly coordinates, and strand.
+
+| Problem | Meaning |
+| --- | --- |
+| `?N` | The locus has `N` reconstructed fragments, where `N` differs from 1. |
+| `-` | At least one expected gene is missing. |
+| `+` | At least one hit to another reference locus lies inside the reconstructed fragments. |
+| `*` | At least one expected hit inside the locus has protein identity below 80% and protein coverage of at least 90%. |
+| `!` | At least one gene hit is flagged as truncated. |
+
+### CPS sequences and gene maps
+
+RISST writes a FASTA per sample with reconstructed fragments in
+`result_cps_dict/` alongside the TSV. Each fragment has its own FASTA record
+in inferred locus orientation. FASTA headers and TSV gene hits use 1-based
+inclusive assembly coordinates. For `GCA_009796465.1`, the two FASTA headers are:
+
+```text
+>WCJJ01000005.1:440-1158(+)
+>WCJJ01000006.1:1-14755(+)
+```
+
+With `-f`, RISST also writes PNG and SVG maps in `gene_structure_map/`
+alongside the TSV. The map arranges fragments on one track in reference-locus
+order. A `//` marks a break of unknown spacing. Blue arrows show expected
+genes and orange arrows show hits to genes from other reference loci within
+the plotted fragments.
+
+## Further
+
+You can build a GenBank reference for another species or a different gene
+cluster with known types. Use one record per reference locus, following the
+format of the supplied databases. Each record needs the full locus nucleotide
+sequence, annotated CDS features, and a unique type label in the `source`
+feature, such as `/note="K locus: 1"`. RISST derives the protein sequences
+from the annotated CDS. If you download annotated records from NCBI, choose
+the full GenBank format and ensure each record covers the intended locus.
+Pass the resulting file to RISST with `-r`.
